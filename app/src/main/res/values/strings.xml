@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">LittleLemon</string>
+    <string name="logo">company logo</string>
+    <string name="onBoardingTopText">Let\'s get to know you</string>
 </resources>

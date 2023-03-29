@@ -2,11 +2,14 @@ package com.coursera.littlelemon.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.coursera.littlelemon.R
 
 // Set of Material typography styles to start with
+val fonts = listOf(Font(R.font.markazi_text_regular), Font(R.font.karla_regular))
 val Typography = Typography(
     body1 = TextStyle(
         fontFamily = FontFamily.Default,
