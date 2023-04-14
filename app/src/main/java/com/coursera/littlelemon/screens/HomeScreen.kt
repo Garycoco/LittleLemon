@@ -1,12 +1,16 @@
 package com.coursera.littlelemon.screens
 
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
@@ -20,24 +24,34 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.coursera.littlelemon.R
+import com.coursera.littlelemon.data.MenuItem
 import com.coursera.littlelemon.navigation.Profile
-import com.coursera.littlelemon.ui.theme.DarkGreen
-import com.coursera.littlelemon.ui.theme.Yellow
+import com.coursera.littlelemon.ui.theme.*
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController, menuItems: List<MenuItem>) {
     val context = LocalContext.current
+    var searchPhrase by remember {
+        mutableStateOf("")
+    }
     val sharedPreferences by lazy {
         context.getSharedPreferences("USER_PREFERENCES", ComponentActivity.MODE_PRIVATE)
     }
-    val name = sharedPreferences.getString("first_name", "")
-    Column(modifier = Modifier) {
+    Column(modifier = Modifier.fillMaxSize()) {
         HomeHeader(navController = navController)
-        Hero()
+        Hero(searchPhrase = searchPhrase, onSearchTextChanged = { text -> searchPhrase = text })
+        if (searchPhrase.isEmpty()) LowerPart(items = menuItems)
+        else LowerPart(items = menuItems.filter { item ->
+            item.title.contains(searchPhrase, ignoreCase = true)
+        })
     }
 }
 
@@ -49,6 +63,7 @@ fun HomeHeader(modifier: Modifier = Modifier, navController: NavController) {
         modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight(.10f)
+            .verticalScroll(rememberScrollState())
             .padding(10.dp),
     ) {
         Box(modifier = modifier.fillMaxWidth()) {
@@ -76,19 +91,19 @@ fun HomeHeader(modifier: Modifier = Modifier, navController: NavController) {
 }
 
 @Composable
-fun Hero(modifier: Modifier = Modifier) {
-    var searchPhrase by remember {
-        mutableStateOf("")
-    }
+fun Hero(modifier: Modifier = Modifier, searchPhrase: String, onSearchTextChanged: (String) -> Unit) {
     Column(
         modifier = modifier
+            .verticalScroll(rememberScrollState())
             .background(color = DarkGreen)
             .padding(horizontal = 10.dp, vertical = 20.dp)
     ) {
         Text(text = "Little Lemon", fontSize = 32.sp, color = Yellow)
         Text(text = "Chicago", fontSize = 22.sp, color = Color.White)
         Row {
-            Box(modifier = modifier.fillMaxWidth().padding(vertical = 10.dp)) {
+            Box(modifier = modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp)) {
                 Text(
                     text = "We are a family owned Mediterranean restaurant," +
                             " focused on traditional recipes served with a modern twist.",
@@ -114,7 +129,7 @@ fun Hero(modifier: Modifier = Modifier) {
         
         OutlinedTextField(
             value = searchPhrase,
-            onValueChange = { newValue -> searchPhrase = newValue },
+            onValueChange = { newValue -> onSearchTextChanged(newValue) },
             leadingIcon = {
                Icon(imageVector = Icons.Default.Search, contentDescription = "Search")            
             },
@@ -125,3 +140,94 @@ fun Hero(modifier: Modifier = Modifier) {
         )
     }
 }
+
+@Composable
+fun LowerPart(items: List<MenuItem>) {
+    val tabsItems = listOf(
+        "Starters",
+        "Mains",
+        "Desserts",
+        "Drinks"
+    )
+    var tabText by remember {
+        mutableStateOf("")
+    }
+    var clicked by remember {
+        mutableStateOf(false)
+    }
+    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        Text(text = "ORDER FOR DELIVERY!", style = Typography.h5, modifier = Modifier.padding(10.dp))
+        LazyRow {
+            items(
+                items = tabsItems,
+                itemContent = { item ->
+                    TabsItem(item = item, onTabClick = { tabText = it })
+                }
+            )
+        }
+    }
+    LazyColumn(
+        modifier = Modifier.fillMaxHeight()
+    ) {
+        items(
+            items = if (tabText.isEmpty()) items else items.filter { it.category == tabText },
+            itemContent = { menuItem ->
+                MenuItems(item = menuItem)
+            }
+        )
+    }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun MenuItems(
+    modifier: Modifier = Modifier,
+    item: MenuItem) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier.padding(10.dp)
+    ) {
+        Column(
+            modifier = modifier
+                .padding(horizontal = 10.dp)
+                .weight(1f)
+        ) {
+            Divider(modifier = modifier.padding(bottom = 10.dp))
+            Text(text = item.title, style = Typography.h5)
+            Text(text = item.description, modifier = modifier.padding(vertical = 5.dp))
+            Text(text = "$${item.price}", fontWeight = FontWeight.W600)
+        }
+        GlideImage(
+            model = item.image,
+            contentDescription = "item image",
+            contentScale = ContentScale.Crop,
+            modifier = modifier
+                .size(100.dp)
+                .padding(top = 10.dp, end = 10.dp)
+        )
+    }
+}
+
+@Composable
+fun TabsItem(item: String, onTabClick: (String) -> Unit) {
+    Text(
+        text = item,
+        modifier = Modifier
+            .padding(10.dp)
+            .clip(shape = RoundedCornerShape(20.dp))
+            .background(color = Grey200)
+            .padding(horizontal = 10.dp, vertical = 5.dp)
+            .clickable {
+                onTabClick(item.lowercase())
+            }
+    )
+}
+
+/*
+@Composable
+@Preview(showBackground = true)
+fun TabsItemPreview() {
+    LittleLemonTheme {
+        TabsItem(item = "Salads")
+    }
+}*/
