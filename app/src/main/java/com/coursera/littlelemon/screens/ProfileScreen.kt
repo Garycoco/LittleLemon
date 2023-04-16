@@ -3,21 +3,21 @@ package com.coursera.littlelemon.screens
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.lerp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.edit
 import androidx.navigation.NavController
 import com.coursera.littlelemon.R
-import com.coursera.littlelemon.navigation.Home
 import com.coursera.littlelemon.navigation.OnBoarding
 
 @Composable
@@ -26,22 +26,23 @@ fun ProfileScreen(
     modifier: Modifier = Modifier
 ) {
     Column {
-        Header(modifier)
+        Header(modifier, navController)
         PersonalInformation(modifier = modifier, navController = navController)
     }
 }
 @Composable
-fun Header(modifier: Modifier) {
-    Row(
+fun Header(modifier: Modifier, navController: NavController) {
+    Box(
         modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight(.25f)
-            .padding(top = 20.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.Top
+            .padding(top = 20.dp)
     ) {
+        IconButton( modifier = modifier.align(Alignment.TopStart), onClick = { navController.popBackStack() }) {
+            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back")
+        }
         Image(
-            modifier = modifier.size(height = 60.dp, width = 200.dp),
+            modifier = modifier.size(height = 60.dp, width = 200.dp).align(Alignment.TopCenter),
             painter = painterResource(id = R.drawable.logo),
             contentDescription = "logo",
             contentScale = ContentScale.FillBounds,
@@ -63,7 +64,8 @@ fun PersonalInformation(modifier: Modifier, navController: NavController) {
         Column(modifier = modifier
             .fillMaxSize()
         ) {
-            Text(text = "Personal Information")
+            Text(text = "Personal Information", fontSize = 32.sp, fontWeight = FontWeight.W600)
+            Spacer(modifier = modifier.height(20.dp))
             EditTextDesign(title = "First name", textFieldLabel = name!!)
             EditTextDesign(title = "Last name", textFieldLabel = surname!!)
             EditTextDesign(title = "Email", textFieldLabel = email!!)

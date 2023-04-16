@@ -20,8 +20,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.edit
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -88,7 +90,7 @@ fun OnBoarding(modifier: Modifier = Modifier, navController: NavController) {
                 .padding(horizontal = 20.dp, vertical = 10.dp)
         ) {
             VertSpace(height = 30)
-            Text(text = "Personal Information")
+            Text(text = "Personal Information", fontSize = 32.sp, fontWeight = FontWeight.W600)
             VertSpace(height = 20)
             Text(text = "First name")
             OutlinedTextField(

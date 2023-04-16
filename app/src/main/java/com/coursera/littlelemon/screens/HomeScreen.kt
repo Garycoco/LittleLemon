@@ -10,10 +10,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
@@ -24,6 +21,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,12 +38,8 @@ import com.coursera.littlelemon.ui.theme.*
 
 @Composable
 fun HomeScreen(navController: NavController, menuItems: List<MenuItem>) {
-    val context = LocalContext.current
     var searchPhrase by remember {
         mutableStateOf("")
-    }
-    val sharedPreferences by lazy {
-        context.getSharedPreferences("USER_PREFERENCES", ComponentActivity.MODE_PRIVATE)
     }
     Column(modifier = Modifier.fillMaxSize()) {
         HomeHeader(navController = navController)
@@ -94,12 +90,12 @@ fun HomeHeader(modifier: Modifier = Modifier, navController: NavController) {
 fun Hero(modifier: Modifier = Modifier, searchPhrase: String, onSearchTextChanged: (String) -> Unit) {
     Column(
         modifier = modifier
-            .verticalScroll(rememberScrollState())
             .background(color = DarkGreen)
             .padding(horizontal = 10.dp, vertical = 20.dp)
+            .verticalScroll(rememberScrollState())
     ) {
-        Text(text = "Little Lemon", fontSize = 32.sp, color = Yellow)
-        Text(text = "Chicago", fontSize = 22.sp, color = Color.White)
+        Text(text = "Little Lemon", fontSize = 64.sp, color = Yellow, fontFamily = markazi)
+        Text(text = "Chicago", fontSize = 48.sp, color = Color.White, fontFamily = markazi)
         Row {
             Box(modifier = modifier
                 .fillMaxWidth()
@@ -152,11 +148,8 @@ fun LowerPart(items: List<MenuItem>) {
     var tabText by remember {
         mutableStateOf("")
     }
-    var clicked by remember {
-        mutableStateOf(false)
-    }
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        Text(text = "ORDER FOR DELIVERY!", style = Typography.h5, modifier = Modifier.padding(10.dp))
+        Text(text = "ORDER FOR DELIVERY!", style = Typography.h5, fontWeight = FontWeight.ExtraBold, modifier = Modifier.padding(10.dp))
         LazyRow {
             items(
                 items = tabsItems,

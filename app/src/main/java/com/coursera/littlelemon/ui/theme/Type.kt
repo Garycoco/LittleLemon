@@ -10,9 +10,11 @@ import com.coursera.littlelemon.R
 
 // Set of Material typography styles to start with
 val fonts = listOf(Font(R.font.markazi_text_regular), Font(R.font.karla_regular))
+val markazi = FontFamily(Font(R.font.markazi_text_regular))
+val karla = FontFamily(Font(R.font.karla_regular))
 val Typography = Typography(
     body1 = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = karla,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
     )
