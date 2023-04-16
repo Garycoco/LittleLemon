@@ -94,7 +94,7 @@ fun Hero(modifier: Modifier = Modifier, searchPhrase: String, onSearchTextChange
             .padding(horizontal = 10.dp, vertical = 20.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Text(text = "Little Lemon", fontSize = 64.sp, color = Yellow, fontFamily = markazi)
+        Text(text = "Little Lemon", fontSize = 65.sp, color = Yellow, fontFamily = markazi)
         Text(text = "Chicago", fontSize = 48.sp, color = Color.White, fontFamily = markazi)
         Row {
             Box(modifier = modifier
